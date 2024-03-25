@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: nginx
+
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+  rules:
+  - host: ecom.com
+    http:
+      paths:
+      - path: /products/?(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: products-srv
+            port:
+              number: 3001
+      - path: /orders/?(.*)  # Update service name here
+        pathType: Prefix
+        backend:
+          service:
+            name: orders-srv  # Change to orders-srv
+            port:
+              number: 3002
+   
