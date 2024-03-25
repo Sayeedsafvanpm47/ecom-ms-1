@@ -7,8 +7,8 @@ let order,connection, channel
 
 async function connectToRabbitMQ() {
           try {
-              const amqpServer = `amqp://guest:guest@production-rabbitmqcluster.default.svc.cluster.local:5672`;
-          //     const amqpServer = `amqp://guest:guest@localhost:5672`;
+          //     const amqpServer = `amqp://guest:guest@production-rabbitmqcluster.default.svc.cluster.local:5672`;
+              const amqpServer = `amqp://guest:guest@localhost:5672`;
               connection = await amqp.connect(amqpServer);
               channel = await connection.createChannel();
               await channel.assertQueue('order-service-queue');
