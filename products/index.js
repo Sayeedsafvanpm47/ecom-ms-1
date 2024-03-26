@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 const productRouter = require('./routes/routes')
 const cookieSession = require('cookie-session')
 const cookieParser = require('cookie-parser')
-
+const {authenticate} = require('./routes/routes')
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
@@ -16,6 +16,7 @@ app.use(cookieSession({
           secured:false
 }))
 app.use('/products',productRouter)
+
 mongoose.connect('mongodb+srv://sayeedsafvan123:APKG4EOpV2x54PXl@crud-react.pzicfdq.mongodb.net/ms-demo-products?retryWrites=true&w=majority&appName=crud-react')
 const db_connect = mongoose.connection
 db_connect.once('open',()=>{

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start" : "node index"
+    "start": "node index"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +13,7 @@
     "amqplib": "^0.10.3",
     "cors": "^2.8.5",
     "express": "^4.19.1",
+    "kafkajs": "^2.2.4",
     "mongodb": "^6.5.0",
     "mongoose": "^8.2.3"
   }

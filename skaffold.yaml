@@ -8,7 +8,7 @@ build:
     push: false 
   
   artifacts:
-    - image: sydsfn/products-demo
+    - image: sydsfn/products-demo-2
       context: products
       docker:
         dockerfile: Dockerfile
@@ -16,8 +16,16 @@ build:
         manual:
           - src: '**/*.js'
             dest: .
-    - image: sydsfn/orders-demo
+    - image: sydsfn/orders-demo-2
       context: orders
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.js'
+            dest: .
+    - image: sydsfn/customer-demo-2
+      context: customer
       docker:
         dockerfile: Dockerfile
       sync:

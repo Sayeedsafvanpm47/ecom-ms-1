@@ -1,25 +1,15 @@
 const Router = require('express').Router;
 const router = new Router()
 const Order = require('../models/orders')
-const amqp = require('amqplib')
+const {Kafka} = require('kafkajs')
 
-let order,connection, channel 
+const kafka = new Kafka({brokers:['localhost:9092']})
 
-async function connectToRabbitMQ() {
-          try {
-          //     const amqpServer = `amqp://guest:guest@production-rabbitmqcluster.default.svc.cluster.local:5672`;
-              const amqpServer = `amqp://guest:guest@localhost:5672`;
-              connection = await amqp.connect(amqpServer);
-              channel = await connection.createChannel();
-              await channel.assertQueue('order-service-queue');
-              console.log('Connected to RabbitMQ');
-              return true;
-          } catch (error) {
-              console.error('Error connecting to RabbitMQ:', error.message);
-              return false;
-          }
-        }
- connectToRabbitMQ()
+const consumer = kafka.consumer({groupId:'order-group'})
+
+let order
+
+
         let createOrder = (products)=>{
           let total = 0;
           products.forEach((product)=>{
@@ -31,23 +21,19 @@ async function connectToRabbitMQ() {
           order.save()
           return order
 }
+const run = async ()=>{
+    await consumer.connect()
+    await consumer.subscribe({topic:'product-order',fromBeginning:true})
+    await consumer.run({
+        eachMessage: async ({message})=>{
+           
+            const products = JSON.parse(message.value); // Deserialize message value
+            console.log(products, 'log of product');
+            createOrder(products);
+           
+        }
+    })
+}
 
-(async () => {
-          const connected = await connectToRabbitMQ();
-          if (connected) {
-              channel.consume('order-service-queue', (data) => {
-                  console.log(data);
-                  console.log(data.content);
-                  const { products } = JSON.parse(data.content);
-                  const newOrder = createOrder(products);
-                  console.log(newOrder);
-                  channel.ack(data);
-                  channel.sendToQueue('product-service-queue', Buffer.from(JSON.stringify(newOrder)));
-                  console.log('order sent');
-              });
-          } else {
-              // Handle connection error
-              console.error('Cannot consume messages from RabbitMQ due to connection error.');
-          }
-        })();
+run().catch(err=>console.log(err))
 module.exports = router
