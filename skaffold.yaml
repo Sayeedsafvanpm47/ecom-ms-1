@@ -24,6 +24,14 @@ build:
         manual:
           - src: '**/*.js'
             dest: .
+    - image: sydsfn/customer-demo
+      context: customer
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.js'
+            dest: .
     
 
 

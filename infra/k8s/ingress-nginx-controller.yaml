@@ -25,4 +25,19 @@ spec:
             name: orders-srv  # Change to orders-srv
             port:
               number: 3002
-   
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: rabbitmq-service
+            port:
+              number: 5672
+
+      - path: /customer/?(.*)  # Update service name here
+        pathType: Prefix
+        backend:
+          service:
+            name: customer-srv  # Change to orders-srv
+            port:
+              number: 3003
+      

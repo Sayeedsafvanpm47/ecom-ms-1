@@ -1,0 +1,30 @@
+apiVersion: apps/v1 
+kind: Deployment 
+metadata:
+  name: customer-depl
+spec: 
+  replicas: 2
+  selector:
+    matchLabels:
+      app: customer
+  template:
+    metadata:
+      labels: 
+        app: customer 
+    spec: 
+      containers: 
+        - name: customer
+          image: sydsfn/customer-demo 
+---
+apiVersion: v1 
+kind: Service 
+metadata:
+  name: customer-srv
+spec: 
+  selector:
+    app: customer 
+  ports:
+  - name: customer 
+    protocol: TCP 
+    port: 3003
+    targetPort: 3003
